@@ -1,0 +1,158 @@
+*{
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: 'Varela Round', sans-serif;
+	background-color: #f7f7f7;
+}
+
+.navbar {
+	background: #fff;
+	-moz-box-shadow: rgba(0, 0, 0, 0.09) 0 2px 0;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.09) 0 2px 0;
+	box-shadow: rgba(0, 0, 0, 0.09) 0 2px 0;
+	padding: 10px 16px;
+}
+
+.navbar .navbar-brand {
+	font-weight: bold;
+	letter-spacing: -1px;
+	font-size: 20px;
+	color: #dd5638;
+}
+
+.navbar-light .navbar-nav .active>.nav-link {
+    color: #435d7d;
+}
+
+.fileinput {
+	text-align: center;
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+
+ul.pagination {
+	margin-bottom: 0;
+}
+
+.card-title {
+    color: #fff;
+    background: #435d7d;
+    padding: 16px 20px;
+}
+
+.footer {
+	background-color: #435d7d; 
+	color: #f7f7f7;
+}
+
+.footer a {
+	color: #d9d9d9;
+}
+
+.main-container {
+	width: 90%;
+	margin: 30px auto;
+	min-height: 600px;
+	position: relative;
+	border: 2px solid rgba(0, 0, 0, 0.09);
+	background-color: #ebebeb;
+	border-radius: 25px;
+}
+
+.search-container {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: rgb(243, 243, 243);
+	border-bottom: 2px solid rgba(0, 0, 0, 0.09);
+	width: 100%;
+	height: 50px;
+	border-radius: 25px 25px 0 0;
+}
+
+.categories{
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	top: 0;
+	left: 0;
+	height: 50px;
+	width: 70%;
+}
+
+.search-btn{
+	width: 20%;
+}
+
+.posts-container {
+	width: 94%;
+	margin: 70px auto;
+	min-height: 400px;
+	/* grid container, 3 in row, same width, space around, height equal 200px */
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-gap: 20px;
+	grid-auto-rows: 350px;
+}
+
+.post{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #fff;
+	border-radius: 25px;
+	padding: 10px;
+}
+
+.basic-info {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	width: 100%;
+	margin-top: 10px;
+}
+
+.place-img {
+	width: 80px;
+	height: 80px;
+}
+
+.place-name {
+	font-size: 20px;
+	font-weight: bold;
+	width: 100px;
+	height: 50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 0;
+}
+
+.ending-info {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	width: 100%;
+}
+
+.added-by {
+	font-size: 12px;
+	opacity: 0.6;
+	margin-bottom: 0;
+}
