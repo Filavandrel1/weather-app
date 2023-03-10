@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Repositories\CategoryRepository;
 
 class WeatherController extends Controller
 {
+
+    public function __construct(protected CategoryRepository $category)
+    {
+    }
     /**
      * Display a listing of the resource.
      */
@@ -19,7 +24,8 @@ class WeatherController extends Controller
      */
     public function create()
     {
-        return view('weather.create');
+        $categories = $this->category->pluck();
+        return view('weather.create', compact('categories'));
     }
 
     /**

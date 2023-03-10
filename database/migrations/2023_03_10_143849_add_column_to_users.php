@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->unique();
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignId('company_id')->after('id')->constrained()->onUpdate('cascade')->onDelete('cascade')->nullable();
         });
     }
 
@@ -22,6 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->dropForeign(['company_id']);
+            $table->dropColumn('company_id');
+        });
     }
 };

@@ -156,3 +156,12 @@ ul.pagination {
 	opacity: 0.6;
 	margin-bottom: 0;
 }
+
+.categories_to_choose{
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-gap: 20px;
+	grid-auto-rows: 50px;
+	width: 90%;
+	margin: 20px auto;
+}

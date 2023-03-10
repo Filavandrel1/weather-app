@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone')->nullable();
             $table->boolean('is_admin')->default(false)->comment('1 = admin, 0 = user');
-            $table->foreignId('company_id')->after('id')->constrained()->onUpdate('cascade')->onDelete('cascade')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

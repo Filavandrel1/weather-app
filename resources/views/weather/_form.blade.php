@@ -1,82 +1,65 @@
 <div class="row">
   <div class="col-md-12">
     <div class="form-group row">
-      <label for="first_name" class="col-md-3 col-form-label">First Name</label>
+      <label for="place" class="col-md-3 col-form-label">City name</label>
       <div class="col-md-9">
-        <input type="text" name="first_name" id="first_name" value="" class="form-control @error('first_name') is-invalid @enderror">
-        @error('first_name')
+        <input type="text" name="place" id="place" value="" class="form-control @error('place') is-invalid @enderror">
+        @error('place')
           <div class="invalid-feedback">
             {{ $message }}
           </div>
         @enderror
       </div>
     </div>
-
     <div class="form-group row">
-      <label for="last_name" class="col-md-3 col-form-label">Last Name</label>
+      <label for="country" class="col-md-3 col-form-label">Country</label>
       <div class="col-md-9">
-        <input type="text" name="last_name" id="last_name" value="" class="form-control @error('last_name') is-invalid @enderror">
-        @error('last_name')
+        <input type="text" name="country" id="country" value="" class="form-control @error('country') is-invalid @enderror">
+        @error('country')
           <div class="invalid-feedback">
             {{ $message }}
           </div>
         @enderror
       </div>
     </div>
-
     <div class="form-group row">
-      <label for="email" class="col-md-3 col-form-label">Email</label>
+      <label for="description" class="col-md-3 col-form-label">Description</label>
       <div class="col-md-9">
-        <input type="text" name="email" id="email" value="" class="form-control @error('email') is-invalid @enderror">
-        @error('email')
+        <textarea name="description" id="address" rows="3" class="form-control"></textarea>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="price" class="col-md-3 col-form-label">Price</label>
+      <div class="col-md-9">
+        <input type="number" min="0" name="price" id="price" value="" class="form-control @error('price') is-invalid @enderror">
+        @error('price')
           <div class="invalid-feedback">
             {{ $message }}
           </div>
         @enderror
       </div>
     </div>
-
-    <div class="form-group row">
-      <label for="phone" class="col-md-3 col-form-label">Phone</label>
-      <div class="col-md-9">
-        <input type="text" name="phone" id="phone" value="" class="form-control @error('phone') is-invalid @enderror">
-        @error('phone')
-            <div class="invalid-feedback">
-                {{ $message }}
-            </div>
-        @enderror
+    <div class="input-group">
+      <div class="custom-file">
+        <input type="file" multiple class="custom-file-input" id="inputGroupFile04">
+        <label class="custom-file-label" for="inputGroupFile04">Wybierz zdjęcia</label>
       </div>
     </div>
-
-    <div class="form-group row">
-      <label for="name" class="col-md-3 col-form-label">Address</label>
-      <div class="col-md-9">
-        <textarea name="address" id="address" rows="3" class="form-control @error('address') is-invalid @enderror"></textarea>
-        @error('address')
-            <div class="invalid-feedback">
-                {{ $message }}
-            </div>
-        @enderror
+    <div class="categories_to_choose">
+      @foreach ($categories as $category)
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <div class="input-group-text">
+            <input type="checkbox" name="categories" id="{{$category}}" value="{{$category}}" aria-label="Checkbox for following text input">
+          </div>
+        </div>
+        <label for="{{$category}}" class="form-control">{{$category}}</label>
       </div>
-    </div>
-    <div class="form-group row">
-      <label for="company_id" class="col-md-3 col-form-label">Company</label>
-      <div class="col-md-9">
-        <select name="company_id" id="company_id" class="form-control @error('company_id') is-invalid @enderror">
-          <option value="">Select Company</option>
-          
-              <option>tadwa</option>
-          </select>
-        @error('company_id')
-            <div class="invalid-feedback">
-                {{ $message }}
-            </div>
-        @enderror
-      </div>
+      @endforeach
     </div>
     <hr>
     <div class="form-group row mb-0">
-      <div class="col-md-9 offset-md-3">
+      <div class="col-md-20 offset-md-5">
           <button type="submit" class="btn btn-primary">Create</button>
           <a href="" class="btn btn-outline-secondary">Cancel</a>
       </div>
