@@ -12,7 +12,7 @@
             <strong>Add New Place</strong>
           </div>           
           <div class="card-body">
-            <form action="" method="post">
+            <form action={{route('weather.store')}} enctype="multipart/form-data" method="post">
               @include('weather._form')
               <input type="hidden" name="_token" value="{{csrf_token()}}">
             </form>

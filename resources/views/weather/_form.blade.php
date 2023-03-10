@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-12">
     <div class="form-group row">
-      <label for="place" class="col-md-3 col-form-label">City name</label>
+      <label for="place" class="col-md-3 col-form-label">Place name</label>
       <div class="col-md-9">
         <input type="text" name="place" id="place" value="" class="form-control @error('place') is-invalid @enderror">
         @error('place')
@@ -25,9 +25,10 @@
     <div class="form-group row">
       <label for="description" class="col-md-3 col-form-label">Description</label>
       <div class="col-md-9">
-        <textarea name="description" id="address" rows="3" class="form-control"></textarea>
+        <textarea name="description" id="description" rows="3" class="form-control"></textarea>
       </div>
     </div>
+    {{-- <input type="hidden" name="user_id" id="user_id" value="1"> --}}
     <div class="form-group row">
       <label for="price" class="col-md-3 col-form-label">Price</label>
       <div class="col-md-9">
@@ -41,8 +42,8 @@
     </div>
     <div class="input-group">
       <div class="custom-file">
-        <input type="file" multiple class="custom-file-input" id="inputGroupFile04">
-        <label class="custom-file-label" for="inputGroupFile04">Wybierz zdjęcia</label>
+        <input type="file" multiple name="images[]" class="custom-file-input" id="images">
+        <label class="custom-file-label" for="images">Wybierz zdjęcia</label>
       </div>
     </div>
     <div class="categories_to_choose">

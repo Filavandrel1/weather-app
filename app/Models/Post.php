@@ -15,15 +15,16 @@ class Post extends Model
         return $this->belongsToMany(Category::class);
     }
 
-    public function images(): BelongsToMany
+    public function images()
     {
-        return $this->belongsToMany(Image::class);
+        return $this->hasMany(Postimage::class);
     }
 
     protected $fillable = [
-        'city',
+        'place',
         'country',
         'description',
-        'price'
+        'price',
+        'user_id'
     ];
 }

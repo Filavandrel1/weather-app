@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string('city');
+            $table->string('place');
             $table->string('country');
             $table->text('description');
             $table->Integer('price');
