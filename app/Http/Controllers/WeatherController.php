@@ -17,7 +17,10 @@ class WeatherController extends Controller
      */
     public function index()
     {
-        return view('weather.index');
+        $categories = Category::all('id', 'name');
+        $posts = Post::all();
+        $images = Postimage::all();
+        return view('weather.index', compact('posts', 'categories', 'images'));
     }
 
     /**
@@ -43,7 +46,13 @@ class WeatherController extends Controller
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg',
             'categories' => 'required'
         ]);
-        $post = Post::create($request->all());
+        $post = Post::create([
+            'place' => $request->place,
+            'country' => $request->country,
+            'description' => $request->description,
+            'price' => $request->price,
+            'logo_image' => $request->file('images.0')->getClientOriginalName()
+        ]);
 
         // dd($request->file('images'));
         if ($request->hasFile('images')) {

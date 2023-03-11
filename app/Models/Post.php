@@ -25,6 +25,7 @@ class Post extends Model
         'country',
         'description',
         'price',
-        'user_id'
+        'user_id',
+        'logo_image',
     ];
 }

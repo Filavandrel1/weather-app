@@ -3,86 +3,30 @@
   <div class="main-container">
     <div class="search-container">
       <div class="categories">
+        @foreach ($categories as $category)
         <div>
-          <input type="checkbox" name="" id="c1">
-          <label for="c1">Categorie 1</label>
+          <input type="checkbox" name="categories[]" id={{"categories".$category->id}} value={{$category->id}}>
+          <label for={{"categories".$category->id}}>{{$category->name}}</label>
         </div>
-        <div>
-          <input type="checkbox" name="" id="c2">
-          <label for="c2">Categorie 2</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="c3">
-          <label for="c3">Categorie 3</label>
-        </div>
-        <div>
-          <input type="checkbox" name="" id="c4">
-          <label for="c4">Categorie 4</label>
-        </div>
+        @endforeach
       </div>
       <input type="text" class="form-control search-btn" name="search" value="" id="search-input" placeholder="Search..." aria-label="Search..." aria-describedby="button-addon2" />
     </div>
     <div class="posts-container">
+      @foreach ($posts as $post)
       <div class="post">
         <div class="basic-info">
-          <img src="" alt="" class="place-img">
-          <p class="place-name">random1</p>
+          <img src={{ asset('storage/images/'. $post->place .$post->id .'/'. $post->logo_image)}} alt="" class="place-img">
+          <p class="place-name">{{$post->place}}</p>
         </div>
-        <p>random2</p>
-        <p><strong> Cena: </strong> random3</p>
+        <p>{{$post->country}}</p>
+        <p><strong> Cena: </strong> {{$post->price}} zł</p>
         <div class="ending-info">
           <p class="added-by">random4</p>
-          <button type="submit" class="btn btn-secondary">Show</button>
+          <a href="{{ route('weather.show', $post['id']) }}" class="btn btn-secondary">Show</a>
         </div>
       </div>
-      <div class="post">
-        <div class="basic-info">
-          <img src="" alt="" class="place-img">
-          <p class="place-name">random1</p>
-        </div>
-        <p>random2</p>
-        <p><strong> Cena: </strong> random3</p>
-        <div class="ending-info">
-          <p class="added-by">random4</p>
-          <button type="submit" class="btn btn-secondary">Show</button>
-        </div>
-      </div>
-      <div class="post">
-        <div class="basic-info">
-          <img src="" alt="" class="place-img">
-          <p class="place-name">random1</p>
-        </div>
-        <p>random2</p>
-        <p><strong> Cena: </strong> random3</p>
-        <div class="ending-info">
-          <p class="added-by">random4</p>
-          <button type="submit" class="btn btn-secondary">Show</button>
-        </div>
-      </div>
-      <div class="post">
-        <div class="basic-info">
-          <img src="" alt="" class="place-img">
-          <p class="place-name">random1</p>
-        </div>
-        <p>random2</p>
-        <p><strong> Cena: </strong> random3</p>
-        <div class="ending-info">
-          <p class="added-by">random4</p>
-          <button type="submit" class="btn btn-secondary">Show</button>
-        </div>
-      </div>
-      <div class="post">
-        <div class="basic-info">
-          <img src="" alt="" class="place-img">
-          <p class="place-name">random1</p>
-        </div>
-        <p>random2</p>
-        <p><strong> Cena: </strong> random3</p>
-        <div class="ending-info">
-          <p class="added-by">random4</p>
-          <button type="submit" class="btn btn-secondary">Show</button>
-        </div>
-      </div>
+      @endforeach
     </div>
   </div>
 </main>
