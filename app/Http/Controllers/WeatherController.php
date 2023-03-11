@@ -3,17 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Repositories\CategoryRepository;
 use App\Models\Post;
 use App\Models\Postimage;
 use Illuminate\Support\Facades\Storage;
+use App\Models\CategoryPost;
+use App\Models\Category;
 
 class WeatherController extends Controller
 {
 
-    public function __construct(protected CategoryRepository $category)
-    {
-    }
     /**
      * Display a listing of the resource.
      */
@@ -27,7 +25,7 @@ class WeatherController extends Controller
      */
     public function create()
     {
-        $categories = $this->category->pluck();
+        $categories = Category::all('id', 'name');
         return view('weather.create', compact('categories'));
     }
 
@@ -54,9 +52,18 @@ class WeatherController extends Controller
                     'image_name' => $imagefile->getClientOriginalName(),
                     'post_id' => $post->id
                 ]);
-                Storage::putFileAs('public/images', $imagefile, $image->image_name);
+                Storage::putFileAs('public/images', $imagefile, $post->place . $post->id . '/' . $image->image_name);
             };
         }
+        if ($request->has('categories')) {
+            foreach ($request->categories as $category) {
+                $categoryPost = CategoryPost::create([
+                    'category_id' => $category,
+                    'post_id' => $post->id
+                ]);
+            }
+        }
+
         // foreach ($request->file('images') as $imagefile) {
         //     $image = Postimage::create([
         //         'image_name' => $imagefile->getClientOriginalName(),
