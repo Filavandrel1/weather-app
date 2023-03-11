@@ -41,7 +41,8 @@ class WeatherController extends Controller
             'country' => 'required|min:2|max:50|string',
             'description' => 'required',
             'price' => 'required|numeric',
-            // 'images' => 'required|mimes:jpeg,png,jpg,gif,svg',
+            'images' => 'required',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg',
             'categories' => 'required'
         ]);
         $post = Post::create($request->all());
