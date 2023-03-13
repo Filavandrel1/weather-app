@@ -18,7 +18,16 @@ class WeatherController extends Controller
     public function index()
     {
         $categories = Category::all('id', 'name');
-        $posts = Post::all();
+        $posts = Post::where(function ($query) {
+            if ($search = request()->query('search')) {
+                $query->where('place', 'LIKE', "%$search%");
+            }
+        })->where(function ($query) {
+            $chosenCategories = request()->input('categories', []);
+            $query->whereHas('categories', function ($subquery) use ($chosenCategories) {
+                $subquery->whereIn('category_id', $chosenCategories);
+            }, '=', count($chosenCategories));
+        })->get();
         $images = Postimage::all();
         return view('weather.index', compact('posts', 'categories', 'images'));
     }

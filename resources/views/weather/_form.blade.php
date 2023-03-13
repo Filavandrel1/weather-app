@@ -51,7 +51,7 @@
         <label class="custom-file-label" for="images">@if (count($errors) > 0)
           {{ $errors->first('images') }} {{$errors->first('images.*')}}
           @else
-          Wybierz zdjęcia
+          Choose images 
           @endif</label>
       </div>
     </div>

@@ -1,17 +1,7 @@
 @extends('layouts.main') @section('title', 'Weather App') @section('content')
 <main>
   <div class="main-container">
-    <div class="search-container">
-      <div class="categories">
-        @foreach ($categories as $category)
-        <div>
-          <input type="checkbox" name="categories[]" id={{"categories".$category->id}} value={{$category->id}}>
-          <label for={{"categories".$category->id}}>{{$category->name}}</label>
-        </div>
-        @endforeach
-      </div>
-      <input type="text" class="form-control search-btn" name="search" value="" id="search-input" placeholder="Search..." aria-label="Search..." aria-describedby="button-addon2" />
-    </div>
+    @include('weather._filter')
     <div class="posts-container">
       @foreach ($posts as $post)
       <div class="post">
@@ -19,7 +9,12 @@
           <img src={{ asset('storage/images/'. $post->place .$post->id .'/'. $post->logo_image)}} alt="" class="place-img">
           <p class="place-name">{{$post->place}}</p>
         </div>
-        <p>{{$post->country}}</p>
+        <div>
+          <p style="font-weight: 700;">Categories:</p>
+          <p>@foreach ($post->categories as $post_category)
+            {{$post_category->name}}@if (!$loop->last), @endif
+            @endforeach</p>
+          </div>
         <p><strong> Cena: </strong> {{$post->price}} zł</p>
         <div class="ending-info">
           <p class="added-by">random4</p>
