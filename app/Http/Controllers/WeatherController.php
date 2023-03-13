@@ -38,7 +38,7 @@ class WeatherController extends Controller
     public function create()
     {
         $categories = Category::all('id', 'name');
-        return view('weather.create', compact('categories'));
+        return view('weather.create', compact('categories'))->with('post', new Post());
     }
 
     /**
@@ -49,6 +49,7 @@ class WeatherController extends Controller
         $request->validate([
             'place' => 'required|min:3|max:50|string',
             'country' => 'required|min:2|max:50|string',
+            'city' => 'required|min:2|max:50|string',
             'description' => 'required',
             'price' => 'required|numeric',
             'images' => 'required',
@@ -58,6 +59,7 @@ class WeatherController extends Controller
         $post = Post::create([
             'place' => $request->place,
             'country' => $request->country,
+            'city' => $request->city,
             'description' => $request->description,
             'price' => $request->price,
             'logo_image' => $request->file('images.0')->getClientOriginalName()
@@ -102,7 +104,9 @@ class WeatherController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $images = Postimage::where('post_id', $id)->get('image_name');
+        return view('weather.show', compact('post', 'id', 'images'));
     }
 
     /**

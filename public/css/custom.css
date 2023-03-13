@@ -165,3 +165,55 @@ ul.pagination {
 	width: 90%;
 	margin: 20px auto;
 }
+
+.post_wrapper{
+	width: 95%;
+	margin: 20px auto;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.post_wrapper>.information_section{
+	width: 20%;
+	height: 80vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+	border-right: 2px solid rgba(0, 0, 0, 0.09);
+	padding: 20px;
+	font-size: 20px;
+}
+
+.post_wrapper>.information_section>div>.post_description{
+	padding: 20px;
+	border: 2px solid rgba(0, 0, 0, 0.09);
+	border-radius: 25px;
+	font-size: 16px;
+}
+
+.post_wrapper>.image_section{
+	width: 60%;
+	height: 80vh;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-gap: 20px;
+	grid-auto-rows: 33%;
+	padding: 20px;
+	border-right: 2px solid rgba(0, 0, 0, 0.09);
+}
+
+.post_wrapper>.image_section>a>img{
+	max-height: 400px;
+}
+
+.post_wrapper>.weather_section{
+	width: 20%;
+	height: 80vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+}
+

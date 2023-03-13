@@ -23,6 +23,7 @@ class Post extends Model
     protected $fillable = [
         'place',
         'country',
+        'city',
         'description',
         'price',
         'user_id',

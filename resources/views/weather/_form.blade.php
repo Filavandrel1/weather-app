@@ -3,7 +3,7 @@
     <div class="form-group row">
       <label for="place" class="col-md-3 col-form-label">Place name</label>
       <div class="col-md-9">
-        <input type="text" name="place" id="place" value="" class="form-control @error('place') is-invalid @enderror">
+        <input type="text" name="place" id="place" value="{{old('place', $post->place)}}" class="form-control @error('place') is-invalid @enderror">
         @error('place')
           <div class="invalid-feedback">
             {{ $message }}
@@ -14,8 +14,19 @@
     <div class="form-group row">
       <label for="country" class="col-md-3 col-form-label">Country</label>
       <div class="col-md-9">
-        <input type="text" name="country" id="country" value="" class="form-control @error('country') is-invalid @enderror">
+        <input type="text" name="country" id="country" value="{{old('country', $post->country)}}" class="form-control @error('country') is-invalid @enderror">
         @error('country')
+          <div class="invalid-feedback">
+            {{ $message }}
+          </div>
+        @enderror
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="city" class="col-md-3 col-form-label">City</label>
+      <div class="col-md-9">
+        <input type="text" name="city" id="city" value="{{old('city', $post->city)}}" class="form-control @error('city') is-invalid @enderror">
+        @error('city')
           <div class="invalid-feedback">
             {{ $message }}
           </div>
@@ -25,7 +36,7 @@
     <div class="form-group row">
       <label for="description" class="col-md-3 col-form-label">Description</label>
       <div class="col-md-9">
-        <textarea name="description" id="description" rows="3" class="form-control @error('description') is-invalid @enderror"></textarea>
+        <textarea name="description" id="description" value="{{old('description', $post->description)}}" rows="3" class="form-control @error('description') is-invalid @enderror"></textarea>
         @error('description')
           <div class="invalid-feedback">
             {{ $message }}
@@ -37,7 +48,7 @@
     <div class="form-group row">
       <label for="price" class="col-md-3 col-form-label">Price</label>
       <div class="col-md-9">
-        <input type="number" min="0" name="price" id="price" value="" class="form-control @error('price') is-invalid @enderror">
+        <input type="number" min="0" name="price" id="price" value="{{old('price', $post->price)}}" class="form-control @error('price') is-invalid @enderror">
         @error('price')
           <div class="invalid-feedback">
             {{ $message }}
@@ -47,7 +58,7 @@
     </div>
     <div class="input-group">
       <div class="custom-file">
-        <input type="file" multiple name="images[]" class="custom-file-input @error('images') is-invalid @enderror" id="images">
+        <input type="file" multiple name="images[]" value="{{old('images', $post->images)}}" class="custom-file-input @error('images') is-invalid @enderror" id="images">
         <label class="custom-file-label" for="images">@if (count($errors) > 0)
           {{ $errors->first('images') }} {{$errors->first('images.*')}}
           @else
@@ -55,7 +66,7 @@
           @endif</label>
       </div>
     </div>
-    <span style="font-size: 10px;">Rozmiary zdjęć powinny być w wymiarze 200 * 200, dopuszczalne formaty: jpeg,png,jpg,gif,svg.</span>
+    <span style="font-size: 10px;">Pierwsze zdjęcie powinno być w wymiarze 200 * 200, będzie ono zdjęciem tytułowym, dopuszczalne formaty: jpeg,png,jpg,gif,svg.</span>
     <hr>
     <p style="text-align: center">Categories</p>
     <div class="categories_to_choose">
