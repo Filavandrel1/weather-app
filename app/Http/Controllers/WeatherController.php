@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use App\Models\Postimage;
 use Illuminate\Support\Facades\Storage;
 use App\Models\CategoryPost;
 use App\Models\Category;
+use Illuminate\Support\Facades\Http;
 
 class WeatherController extends Controller
 {
@@ -44,18 +46,9 @@ class WeatherController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        $request->validate([
-            'place' => 'required|min:3|max:50|string',
-            'country' => 'required|min:2|max:50|string',
-            'city' => 'required|min:2|max:50|string',
-            'description' => 'required',
-            'price' => 'required|numeric',
-            'images' => 'required',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg',
-            'categories' => 'required'
-        ]);
+        $request->validate($request->rules());
         $post = Post::create([
             'place' => $request->place,
             'country' => $request->country,
@@ -106,7 +99,27 @@ class WeatherController extends Controller
     {
         $post = Post::findOrFail($id);
         $images = Postimage::where('post_id', $id)->get('image_name');
-        return view('weather.show', compact('post', 'id', 'images'));
+        try {
+            $response = Http::get(
+                'https://api.openweathermap.org/data/2.5/weather',
+                [
+                    'q' => $post->city,
+                    'appid' => '943399d1c29874339b68a7f7398d0c35'
+                ]
+            )->json();
+            $weather = [
+                'description' => $response['weather'][0]['description'],
+                'iconURL' => 'http://openweathermap.org/img/wn/' . $response['weather'][0]['icon'] . '.png',
+                'temp' => $response['main']['temp'] - 273.15,
+                'humidity' => $response['main']['humidity'],
+                'error' => false
+            ];
+        } catch (\Throwable $th) {
+            $weather = [
+                'error' => true
+            ];
+        }
+        return view('weather.show', compact('post', 'id', 'images', 'weather'));
     }
 
     /**
@@ -114,15 +127,18 @@ class WeatherController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $categories = Category::all('id', 'name');
+        return view('weather.edit', compact('post', 'categories'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(PostRequest $request, string $id)
     {
-        //
+        $request->validate($request->rules());
+        return redirect()->route('weather.index');
     }
 
     /**

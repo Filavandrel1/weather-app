@@ -36,7 +36,7 @@
     <div class="form-group row">
       <label for="description" class="col-md-3 col-form-label">Description</label>
       <div class="col-md-9">
-        <textarea name="description" id="description" value="{{old('description', $post->description)}}" rows="3" class="form-control @error('description') is-invalid @enderror"></textarea>
+        <textarea name="description" id="description" rows="3" class="form-control @error('description') is-invalid @enderror">{{old('description', $post->description)}}</textarea>
         @error('description')
           <div class="invalid-feedback">
             {{ $message }}
@@ -56,17 +56,7 @@
         @enderror
       </div>
     </div>
-    <div class="input-group">
-      <div class="custom-file">
-        <input type="file" multiple name="images[]" value="{{old('images', $post->images)}}" class="custom-file-input @error('images') is-invalid @enderror" id="images">
-        <label class="custom-file-label" for="images">@if (count($errors) > 0)
-          {{ $errors->first('images') }} {{$errors->first('images.*')}}
-          @else
-          Choose images 
-          @endif</label>
-      </div>
-    </div>
-    <span style="font-size: 10px;">Pierwsze zdjęcie powinno być w wymiarze 200 * 200, będzie ono zdjęciem tytułowym, dopuszczalne formaty: jpeg,png,jpg,gif,svg.</span>
+    @include('weather._image-form')
     <hr>
     <p style="text-align: center">Categories</p>
     <div class="categories_to_choose">
@@ -74,17 +64,26 @@
       <div class="input-group mb-3">
         <div class="input-group-prepend">
           <div class="input-group-text">
-            <input type="checkbox" name="categories[]" id="{{$category->name}}" value="{{$category->id}}" aria-label="Checkbox for following text input">
+            <input type="checkbox" name="categories[]" 
+              @foreach (old('categories', $post->categories->pluck('id')->toArray()) as $choosed_category)
+                  @if ($choosed_category == $category->id)
+                    checked
+                  @endif  
+              @endforeach
+           id="{{$category->name}}" value="{{$category->id}}" aria-label="Checkbox for following text input">
           </div>
         </div>
         <label for="{{$category->name}}" class="form-control">{{$category->name}}</label>
       </div>
       @endforeach
     </div>
+    @if (count($errors) > 0)
+      <span style="color: red">{{ $errors->first('categories') }}</span>
+    @endif
     <hr>
     <div class="form-group row mb-0">
       <div class="col-md-20 offset-md-5">
-          <button type="submit" class="btn btn-primary">Create</button>
+          <button type="submit" class="btn btn-primary">{{$post->exists ? 'Update' : 'Save'}}</button>
           <a href="{{route('weather.index')}}" class="btn btn-outline-secondary">Cancel</a>
       </div>
     </div>

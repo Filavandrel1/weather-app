@@ -36,11 +36,32 @@
       @endforeach
     </div>
     <div class="weather_section">
-      Tu będzie API pogodowe
+      <div class="weather_conditions">
+        @if ($weather['error']== false) 
+        <p>Current weather for {{$post->city}}:</p>
+        <div class="weather_parameters_wrapper">
+          <p style="border-right: 2px solid rgba(0,0,0,0.09); padding: 20px 10px; width: 50%; margin-bottom: 0;">{{$weather['description']}}</p>
+          <div style="width: 50%;">
+            <img src="{{$weather['iconURL']}}" width="100%" alt="">
+          </div>
+        </div>
+        <div class="temperature_wrapper">
+          <p style="border-right: 2px solid rgba(0,0,0,0.09); padding: 20px 10px; width: 50%;">Temp: {{$weather['temp']}}°C</p>
+          <p style="padding: 20px 10px; width: 50%;">Humidity: {{$weather['humidity']}}%</p>
+        </div>
+        @else
+        <p>Weather for {{$post->city}} is not available</p>
+        <p>Sorry for complication</p>
+        <p>We working on it</p>
+        @endif
+      </div>
+      <div class="price_wrapper">
+        <p>Prices starts from:</p>
+        <p>{{$post->price}}zł</p>
+      </div>
     </div>
   </div>
   <div class="comment_section" style="text-align: center">
-    Tu będą komentarze
   </div>
 </main>
 @endsection
