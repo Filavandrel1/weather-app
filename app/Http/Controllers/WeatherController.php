@@ -104,7 +104,7 @@ class WeatherController extends Controller
                 'https://api.openweathermap.org/data/2.5/weather',
                 [
                     'q' => $post->city,
-                    'appid' => '943399d1c29874339b68a7f7398d0c35'
+                    'appid' => ''
                 ]
             )->json();
             $weather = [
