@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\CategoryPost;
 use App\Models\Category;
 use Illuminate\Support\Facades\Http;
+use Termwind\Components\Dd;
 
 class WeatherController extends Controller
 {
@@ -55,6 +56,7 @@ class WeatherController extends Controller
             'city' => $request->city,
             'description' => $request->description,
             'price' => $request->price,
+            'user_id' => auth()->user()->id,
             'logo_image' => $request->file('images.0')->getClientOriginalName()
         ]);
 
@@ -97,6 +99,7 @@ class WeatherController extends Controller
      */
     public function show(string $id)
     {
+        $api_key = env('API_KEY');
         $post = Post::findOrFail($id);
         $images = Postimage::where('post_id', $id)->get('image_name');
         try {
@@ -104,7 +107,7 @@ class WeatherController extends Controller
                 'https://api.openweathermap.org/data/2.5/weather',
                 [
                     'q' => $post->city,
-                    'appid' => '943399d1c29874339b68a7f7398d0c35'
+                    'appid' => $api_key
                 ]
             )->json();
             $weather = [

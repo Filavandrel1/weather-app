@@ -20,6 +20,11 @@ class Post extends Model
         return $this->hasMany(Postimage::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     protected $fillable = [
         'place',
         'country',

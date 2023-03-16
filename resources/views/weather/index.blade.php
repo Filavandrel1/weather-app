@@ -17,7 +17,7 @@
           </div>
         <p><strong> Cena: </strong> {{$post->price}} zł</p>
         <div class="ending-info">
-          <p class="added-by">random4</p>
+          <p class="added-by">{{$post->user->name}}</p>
           <a href="{{ route('weather.show', $post['id']) }}" class="btn btn-secondary">Show</a>
         </div>
       </div>

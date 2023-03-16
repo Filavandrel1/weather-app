@@ -38,7 +38,7 @@
     <div class="weather_section">
       <div class="weather_conditions">
         @if ($weather['error']== false) 
-        <p>Current weather for {{$post->city}}:</p>
+        <p style="text-align: center">Current weather for {{$post->city}}:</p>
         <div class="weather_parameters_wrapper">
           <p style="border-right: 2px solid rgba(0,0,0,0.09); padding: 20px 10px; width: 50%; margin-bottom: 0;">{{$weather['description']}}</p>
           <div style="width: 50%;">
