@@ -152,6 +152,8 @@ class WeatherController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $post->delete();
+        return redirect()->route('weather.index');
     }
 }

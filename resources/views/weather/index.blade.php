@@ -18,7 +18,17 @@
         <p><strong> Cena: </strong> {{$post->price}} zł</p>
         <div class="ending-info">
           <p class="added-by">{{$post->user->name}}</p>
-          <a href="{{ route('weather.show', $post['id']) }}" class="btn btn-secondary">Show</a>
+          <div>
+            <a href="{{ route('weather.show', $post->id) }}" class="btn btn-sm btn-circle btn-outline-info"
+              title="Show"><i class="fa fa-eye"></i></a>
+            <a href="{{route('weather.edit', $post->id)}}" class="btn btn-sm btn-circle btn-outline-secondary" title="Edit"><i
+                class="fa fa-edit"></i></a>
+            <form action="{{route('weather.destroy', $post->id)}}" onsubmit="return confirm('Are you sure?')" style="display:inline" method='post'>
+              @csrf
+              @method('delete')
+              <button type="submit" class="btn btn-sm btn-circle btn-outline-danger" title="Delete"><i class="fa fa-times"></i></button>
+            </form>
+          </div>
         </div>
       </div>
       @endforeach
