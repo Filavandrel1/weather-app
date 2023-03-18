@@ -25,6 +25,9 @@ class WeatherController extends Controller
             if ($search = request()->query('search')) {
                 $query->where('place', 'LIKE', "%$search%");
             }
+            if ($search2 = request()->query('user_posts')) {
+                $query->where('user_id', 'LIKE', auth()->id());
+            }
         })->where(function ($query) {
             $chosenCategories = request()->input('categories', []);
             $query->whereHas('categories', function ($subquery) use ($chosenCategories) {

@@ -61,7 +61,40 @@
       </div>
     </div>
   </div>
-  <div class="comment_section" style="text-align: center">
+  <div class="comment_section" style="margin-bottom: 10vh;">
+    <hr>
+    <h2 style="text-align: center">Comments</h2>
+    <div class="comments_wrapper">
+      @foreach ($post->comments as $comment)
+      <div class="comment">
+        <div class="comment_header">
+          <span style="font-weight: 700; font-size: 14px;">{{$comment->user->name}}</span> <span style="color: rgba(0, 0, 0, 0.3); margin-left: 20px;"> {{$comment->created_at}} </span>
+        </div>
+        <p style="margin-bottom: 0px">{{$comment->content}}</p>
+        @if ($comment->user_id == Auth::id() || Auth::user()->role == 'admin')
+          <form action="{{route('comment.destroy', $comment->id)}}" style="text-align: end" method="post">
+            @csrf
+            @method('delete')
+            <button type="submit" style="width: 100px; height: 30px; padding: 0;"class="btn btn-outline-danger">Delete</button>
+          </form> 
+          @endif
+        <hr>
+      </div>
+      @endforeach
+      <div class="adding_comment_wrapper">
+        <form action="{{route('comment.store')}}" method="POST" class="adding_comment_form">
+          @csrf
+          <div style="display: flex; justify-content: center; align-items: center">
+            <textarea name="content" id="content" required class="comment_content" cols="100" 
+            placeholder="@guest You need to be logged in to add comment @endguest @auth Add comment...@endauth"></textarea>
+            <input type="hidden" name="post_id" value="{{$post->id}}">
+            <button style="height: 50%; margin-left: 30px;" @guest
+              disabled
+            @endguest class="btn btn-secondary">Send</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </main>
 @endsection

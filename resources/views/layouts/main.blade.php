@@ -46,6 +46,7 @@
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <a class="dropdown-item" href="{{route('profile.edit')}}">Profile</a>
+                <a class="dropdown-item" href="{{route('weather.index', ['user_posts' => true])}}">My posts</a>
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                   @csrf
                   <button class="dropdown-item">Logout</button>
