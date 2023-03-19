@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Role;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\CategoryPost;
 use App\Models\Category;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Validation\Rules\Exists;
 use Termwind\Components\Dd;
 
 class WeatherController extends Controller
@@ -20,6 +22,7 @@ class WeatherController extends Controller
      */
     public function index()
     {
+        dd(auth()->user()->role->value);
         $categories = Category::all('id', 'name');
         $posts = Post::where(function ($query) {
             if ($search = request()->query('search')) {
@@ -43,6 +46,9 @@ class WeatherController extends Controller
      */
     public function create()
     {
+        if (!($user = auth()->user())) {
+            return redirect()->route('weather.index')->with('message', 'Log in to create a post!');
+        }
         $categories = Category::all('id', 'name');
         return view('weather.create', compact('categories'))->with('post', new Post());
     }
@@ -70,7 +76,7 @@ class WeatherController extends Controller
                     'image_name' => $imagefile->getClientOriginalName(),
                     'post_id' => $post->id
                 ]);
-                Storage::putFileAs('public/images', $imagefile, $post->place . $post->id . '/' . $image->image_name);
+                Storage::putFileAs('public/images', $imagefile, str_replace(' ', '_', $post->place) . $post->id . '/' . $image->image_name);
             };
         }
         if ($request->has('categories')) {
@@ -94,7 +100,7 @@ class WeatherController extends Controller
         //     'post_id' => $post->id
         // ]);
         // Storage::putFileAs('public/images', $request->file('image'), $image->image_name);
-        return redirect()->route('weather.index');
+        return redirect()->route('weather.index')->with('message', 'Post created successfully!');
     }
 
     /**
@@ -133,6 +139,9 @@ class WeatherController extends Controller
      */
     public function edit(string $id)
     {
+        if (!($user = auth()->user()) || auth()->user()->role->value === Role::Admin->value || auth()->id() != Post::findOrFail($id)->user_id) {
+            return redirect()->route('weather.index')->with('message', 'You are not authorized to edit this post!');
+        }
         $post = Post::findOrFail($id);
         $categories = Category::all('id', 'name');
         return view('weather.edit', compact('post', 'categories'));
@@ -144,7 +153,7 @@ class WeatherController extends Controller
     public function update(PostRequest $request, string $id)
     {
         $request->validate($request->rules());
-        return redirect()->route('weather.index');
+        return redirect()->route('weather.index')->with('message', 'Post updated successfully!');
     }
 
     /**
@@ -154,6 +163,6 @@ class WeatherController extends Controller
     {
         $post = Post::findOrFail($id);
         $post->delete();
-        return redirect()->route('weather.index');
+        return redirect()->route('weather.index')->with('message', 'Post deleted successfully!');
     }
 }

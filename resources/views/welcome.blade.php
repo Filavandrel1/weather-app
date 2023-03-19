@@ -25,9 +25,11 @@
                         <div style="margin-top: 50px;">
                             <a href="{{ route('weather.index') }}" style="font-size: 24px;" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">View posts</a>
                         </div>
+                        @auth
                         <div style="margin-top: 50px;">
                             <a href="{{ route('weather.create') }}" style="font-size: 24px;" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Create post</a>
                         </div>
+                        @endauth
                         <div style="margin-top: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center">
                             @auth
                                 <a href="{{ url('/dashboard') }}" style="font-size: 24px;" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Dashboard</a>

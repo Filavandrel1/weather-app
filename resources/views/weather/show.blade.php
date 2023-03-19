@@ -30,8 +30,8 @@
     </div>
     <div class="image_section">
       @foreach ($images as $image)
-      <a href="{{asset('storage/images/'. $post->place .$post->id .'/'.$image->image_name)}}">
-        <img class="post_img  " src="{{asset('storage/images/'. $post->place .$post->id .'/'.$image->image_name)}}" width="100%">
+      <a href="{{asset('storage/images/'. str_replace(' ', '_', $post->place) .$post->id .'/'.$image->image_name)}}">
+        <img class="post_img  " src="{{asset('storage/images/'. str_replace(' ', '_', $post->place) .$post->id .'/'.$image->image_name)}}" width="100%">
       </a>
       @endforeach
     </div>
@@ -71,13 +71,15 @@
           <span style="font-weight: 700; font-size: 14px;">{{$comment->user->name}}</span> <span style="color: rgba(0, 0, 0, 0.3); margin-left: 20px;"> {{$comment->created_at}} </span>
         </div>
         <p style="margin-bottom: 0px">{{$comment->content}}</p>
-        @if ($comment->user_id == Auth::id() || Auth::user()->role == 'admin')
+        @auth    
+          @if ($comment->user_id == Auth::id() || Auth::user()->is_admin )
           <form action="{{route('comment.destroy', $comment->id)}}" style="text-align: end" method="post">
             @csrf
             @method('delete')
             <button type="submit" style="width: 100px; height: 30px; padding: 0;"class="btn btn-outline-danger">Delete</button>
           </form> 
           @endif
+        @endauth
         <hr>
       </div>
       @endforeach
