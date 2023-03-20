@@ -12,9 +12,10 @@
             <strong>Add New Place</strong>
           </div>           
           <div class="card-body">
-            <form action='' enctype="multipart/form-data" method="post">
+            <form action={{route('weather.update', $post->id)}} enctype="multipart/form-data" method="post">
+              @csrf
+              @method('put')
               @include('weather._form')
-              <input type="hidden" name="_token" value="{{csrf_token()}}">
             </form>
           </div>
         </div>

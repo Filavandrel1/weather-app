@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Enums\Role;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
@@ -22,12 +24,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('delete_post', function (User $user, Post $post) {
-            return $user->id === $post->user_id || $user->is_admin;
-        });
+        // Gate::define('delete_post', function (User $user, Post $post) {
+        //     return $user->id === $post->user_id || $user->role === Role::Admin;
+        // });
 
-        Gate::define('update_post', function (User $user, Post $post) {
-            return $user->id === $post->user_id || $user->is_admin;
-        });
+        // Gate::define('update_post', function (User $user, Post $post) {
+        //     return $user->id === $post->user_id || $user->role === Role::Admin;
+        // });
+
+        // Gate::define('delete_comment', function (User $user, Comment $comment) {
+        //     return $user->id === $comment->user_id || $user->role === Role::Admin;
+        // });
     }
 }

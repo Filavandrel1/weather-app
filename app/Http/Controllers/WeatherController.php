@@ -10,8 +10,8 @@ use App\Models\Postimage;
 use Illuminate\Support\Facades\Storage;
 use App\Models\CategoryPost;
 use App\Models\Category;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Validation\Rules\Exists;
 use Termwind\Components\Dd;
 
 class WeatherController extends Controller
@@ -22,7 +22,6 @@ class WeatherController extends Controller
      */
     public function index()
     {
-        dd(auth()->user()->role->value);
         $categories = Category::all('id', 'name');
         $posts = Post::where(function ($query) {
             if ($search = request()->query('search')) {
@@ -46,7 +45,7 @@ class WeatherController extends Controller
      */
     public function create()
     {
-        if (!($user = auth()->user())) {
+        if (!auth()->check()) {
             return redirect()->route('weather.index')->with('message', 'Log in to create a post!');
         }
         $categories = Category::all('id', 'name');
@@ -74,9 +73,10 @@ class WeatherController extends Controller
             foreach ($request->file('images') as $imagefile) {
                 $image = Postimage::create([
                     'image_name' => $imagefile->getClientOriginalName(),
-                    'post_id' => $post->id
+                    'post_id' => $post->id,
+                    'path' => str_replace(' ', '_', $post->place) . $post->id
                 ]);
-                Storage::putFileAs('public/images', $imagefile, str_replace(' ', '_', $post->place) . $post->id . '/' . $image->image_name);
+                Storage::putFileAs('public/images', $imagefile, $image->path . '/' . $image->image_name);
             };
         }
         if ($request->has('categories')) {
@@ -137,12 +137,10 @@ class WeatherController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        if (!($user = auth()->user()) || auth()->user()->role->value === Role::Admin->value || auth()->id() != Post::findOrFail($id)->user_id) {
-            return redirect()->route('weather.index')->with('message', 'You are not authorized to edit this post!');
-        }
         $post = Post::findOrFail($id);
+        $this->authorize('update', $post);
         $categories = Category::all('id', 'name');
         return view('weather.edit', compact('post', 'categories'));
     }
@@ -150,10 +148,38 @@ class WeatherController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(PostRequest $request, string $id)
+    public function update(Request $request, $id)
     {
-        $request->validate($request->rules());
-        return redirect()->route('weather.index')->with('message', 'Post updated successfully!');
+        $post = Post::findOrFail($id);
+        $this->authorize('update', $post);
+
+        $post->update([
+            'place' => $request->place,
+            'country' => $request->country,
+            'city' => $request->city,
+            'description' => $request->description,
+            'price' => $request->price,
+        ]);
+
+        // dd($request->file('images'));
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $imagefile) {
+                $image = Postimage::create([
+                    'image_name' => $imagefile->getClientOriginalName(),
+                    'post_id' => $post->id,
+                ]);
+                Storage::putFileAs('public/images', $imagefile, str_replace(' ', '_', $post->place) . $post->id . '/' . $image->image_name);
+            };
+        }
+        if ($request->has('categories')) {
+            foreach ($request->categories as $category) {
+                $categoryPost = CategoryPost::create([
+                    'category_id' => $category,
+                    'post_id' => $post->id
+                ]);
+            }
+        }
+        return redirect()->route('weather.index')->with('message', 'Post updated successfully');
     }
 
     /**
@@ -162,6 +188,8 @@ class WeatherController extends Controller
     public function destroy(string $id)
     {
         $post = Post::findOrFail($id);
+        Storage::deleteDirectory('public/images/' . $post->images->first()->path);
+        $this->authorize('delete', $post);
         $post->delete();
         return redirect()->route('weather.index')->with('message', 'Post deleted successfully!');
     }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Comment;
-
+use Illuminate\Support\Facades\Gate;
 
 class CommentController extends Controller
 {
@@ -24,6 +24,9 @@ class CommentController extends Controller
     public function destroy($id)
     {
         $comment = Comment::find($id);
+        if (!Gate::allows('delete', $comment)) {
+            return redirect()->back();
+        }
         $comment->delete();
         return redirect()->back();
     }

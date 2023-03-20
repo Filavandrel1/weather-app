@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WeatherController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +18,8 @@ use App\Http\Controllers\CommentController;
 */
 
 Route::resource('weather', WeatherController::class);
-
+Route::delete('image/{id}', [ImageController::class, 'destroy'])->name('image.destroy');
+Route::put('image/{id}', [ImageController::class, 'update'])->name('image.update');
 Route::get('/', function () {
     return view('welcome');
 });

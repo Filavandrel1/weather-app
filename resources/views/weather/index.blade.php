@@ -9,7 +9,7 @@
       @foreach ($posts as $post)
       <div class="post">
         <div class="basic-info">
-          <img src={{ asset('storage/images/'. str_replace(' ', '_', $post->place) .$post->id .'/'. $post->logo_image)}} alt="" class="place-img">
+          <img src={{ asset('storage/images/'. $post->images->first()->path . '/'. $post->logo_image)}} alt="" class="place-img">
           <p class="place-name">{{$post->place}}</p>
         </div>
         <div>
@@ -24,9 +24,7 @@
           <div>
             <a href="{{ route('weather.show', $post->id) }}" class="btn btn-sm btn-circle btn-outline-info"
               title="Show"><i class="fa fa-eye"></i></a>
-              @auth
-                  
-              @if (Auth::user()->id == $post->user_id || Auth::user()->role == 'admin')
+              @can (['update', 'delete'], $post)
               <a href="{{route('weather.edit', $post->id)}}" class="btn btn-sm btn-circle btn-outline-secondary" title="Edit"><i
               class="fa fa-edit"></i></a>
               <form action="{{route('weather.destroy', $post->id)}}" onsubmit="return confirm('Are you sure?')" style="display:inline" method='post'>
@@ -34,8 +32,7 @@
                 @method('delete')
                 <button type="submit" class="btn btn-sm btn-circle btn-outline-danger" title="Delete"><i class="fa fa-times"></i></button>
               </form>
-              @endauth
-            @endif
+              @endcan
           </div>
         </div>
       </div>

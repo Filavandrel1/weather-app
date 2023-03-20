@@ -30,8 +30,8 @@
     </div>
     <div class="image_section">
       @foreach ($images as $image)
-      <a href="{{asset('storage/images/'. str_replace(' ', '_', $post->place) .$post->id .'/'.$image->image_name)}}">
-        <img class="post_img  " src="{{asset('storage/images/'. str_replace(' ', '_', $post->place) .$post->id .'/'.$image->image_name)}}" width="100%">
+      <a href="{{asset('storage/images/'. $post->images->first()->path .'/'.$image->image_name)}}">
+        <img class="post_img  " src={{ asset('storage/images/'. $post->images->first()->path . '/'. $image->image_name)}} width="100%">
       </a>
       @endforeach
     </div>
@@ -72,13 +72,13 @@
         </div>
         <p style="margin-bottom: 0px">{{$comment->content}}</p>
         @auth    
-          @if ($comment->user_id == Auth::id() || Auth::user()->is_admin )
+          @can ('delete', $comment)
           <form action="{{route('comment.destroy', $comment->id)}}" style="text-align: end" method="post">
             @csrf
             @method('delete')
             <button type="submit" style="width: 100px; height: 30px; padding: 0;"class="btn btn-outline-danger">Delete</button>
           </form> 
-          @endif
+          @endcan
         @endauth
         <hr>
       </div>
