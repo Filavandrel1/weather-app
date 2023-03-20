@@ -1,5 +1,4 @@
 <script src="https://kit.fontawesome.com/fb8845726a.js" crossorigin="anonymous"></script>
-  @if ($post->images->count() < 1)
   <div class="input-group">
     <div class="custom-file">
       <input type="file" multiple name="images[]" value="{{old('images', $post->images)}}" class="custom-file-input @error('images') is-invalid @enderror" id="images">
@@ -11,19 +10,6 @@
       </div>
     </div>
     <span style="font-size: 10px;">Pierwsze zdjęcie powinno być w wymiarze 200 * 200, będzie ono zdjęciem tytułowym, dopuszczalne formaty: jpeg,png,jpg,gif,svg.</span>
-    @else
-    <div class="input-group">
-      <div class="custom-file">
-        <input type="hidden" name="images[]" value="name.png">
-        <input type="file" multiple name="images_adding[]" value="{{old('images', $post->images)}}" class="custom-file-input @error('images') is-invalid @enderror" id="images_adding">
-        <label class="custom-file-label" for="images_adding">@if (count($errors) > 0)
-          <span style="color: red">{{ $errors->first('images') }} {{$errors->first('images.*')}}</span>
-          @else
-          Add images
-          @endif</label>
-        </div>
-      </div>
-    @endif 
   <div class="all_image_contener">
     @foreach ($post->images as $image)
       <div style="position: relative">

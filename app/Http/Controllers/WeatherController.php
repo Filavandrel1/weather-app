@@ -153,6 +153,16 @@ class WeatherController extends Controller
         $post = Post::findOrFail($id);
         $this->authorize('update', $post);
 
+        $request->validate([
+            'place' => 'required|min:3|max:50|string',
+            'country' => 'required|min:2|max:50|string',
+            'city' => 'required|min:2|max:50|string',
+            'description' => 'required',
+            'price' => 'required|numeric',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg',
+            'categories' => 'array|min:1|required'
+        ]);
+
         $post->update([
             'place' => $request->place,
             'country' => $request->country,
@@ -167,11 +177,16 @@ class WeatherController extends Controller
                 $image = Postimage::create([
                     'image_name' => $imagefile->getClientOriginalName(),
                     'post_id' => $post->id,
+                    'path' => $post->images->first()->path
                 ]);
-                Storage::putFileAs('public/images', $imagefile, str_replace(' ', '_', $post->place) . $post->id . '/' . $image->image_name);
+                Storage::putFileAs('public/images', $imagefile, $post->images->first()->path . '/' . $image->image_name);
             };
         }
         if ($request->has('categories')) {
+            $categories = CategoryPost::where('post_id', $post->id)->get();
+            foreach ($categories as $category) {
+                $category->delete();
+            }
             foreach ($request->categories as $category) {
                 $categoryPost = CategoryPost::create([
                     'category_id' => $category,
