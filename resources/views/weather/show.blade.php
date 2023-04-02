@@ -29,7 +29,7 @@
       </div>
     </div>
     <div class="image_section">
-      @foreach ($images as $image)
+      @foreach ($post->images as $image)
       <a href="{{asset('storage/images/'. $post->images->first()->path .'/'.$image->image_name)}}">
         <img class="post_img  " src={{ asset('storage/images/'. $post->images->first()->path . '/'. $image->image_name)}} width="100%">
       </a>
@@ -89,6 +89,11 @@
           <div style="display: flex; justify-content: center; align-items: center">
             <textarea name="content" id="content" required class="comment_content" cols="100" 
             placeholder="@guest You need to be logged in to add comment @endguest @auth Add comment...@endauth"></textarea>
+            @error('content')
+            <div class="invalid-feedback">
+              {{ $message }}
+            </div>
+          @enderror
             <input type="hidden" name="post_id" value="{{$post->id}}">
             <button style="height: 50%; margin-left: 30px;" @guest
               disabled

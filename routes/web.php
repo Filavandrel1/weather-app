@@ -17,9 +17,15 @@ use App\Http\Controllers\ImageController;
 |
 */
 
-Route::resource('weather', WeatherController::class);
-Route::delete('image/{id}', [ImageController::class, 'destroy'])->name('image.destroy');
-Route::put('image/{id}', [ImageController::class, 'update'])->name('image.update');
+Route::resource('weather', WeatherController::class)->only(['index', 'create', 'store']);
+Route::get('weather/{post}', [WeatherController::class, 'show'])->name('weather.show');
+Route::get('weather/{post}/edit', [WeatherController::class, 'edit'])->name('weather.edit');
+Route::put('weather/{post}', [WeatherController::class, 'update'])->name('weather.update');
+Route::delete('weather/{post}', [WeatherController::class, 'destroy'])->name('weather.destroy');
+
+Route::delete('image/{postimage}', [ImageController::class, 'destroy'])->name('image.destroy');
+Route::put('image/{postimage}', [ImageController::class, 'update'])->name('image.update');
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -34,7 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::post('comment', [CommentController::class, 'store'])->name('comment.store');
-Route::delete('comment/{id}', [CommentController::class, 'destroy'])->name('comment.destroy');
+Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');
+Route::delete('comment/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy');
 
 require __DIR__ . '/auth.php';

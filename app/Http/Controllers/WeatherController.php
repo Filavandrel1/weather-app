@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\Role;
-use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Models\Postimage;
 use Illuminate\Support\Facades\Storage;
 use App\Models\CategoryPost;
 use App\Models\Category;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Http;
+use Illuminate\View\View;
 use Termwind\Components\Dd;
 
 class WeatherController extends Controller
@@ -20,30 +21,28 @@ class WeatherController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
         $categories = Category::all('id', 'name');
         $posts = Post::where(function ($query) {
-            if ($search = request()->query('search')) {
-                $query->where('place', 'LIKE', "%$search%");
-            }
-            if ($search2 = request()->query('user_posts')) {
-                $query->where('user_id', 'LIKE', auth()->id());
-            }
+            $query->when(request()->has('search'), static function (Builder $query) {
+                $query->where('place', 'LIKE', '%' . request()->input('search') . '%');
+            })->when(request()->has('user_posts'), static function (Builder $query) {
+                $query->where('user_id', auth()->user()->id);
+            });
         })->where(function ($query) {
             $chosenCategories = request()->input('categories', []);
             $query->whereHas('categories', function ($subquery) use ($chosenCategories) {
                 $subquery->whereIn('category_id', $chosenCategories);
             }, '=', count($chosenCategories));
         })->get();
-        $images = Postimage::all();
-        return view('weather.index', compact('posts', 'categories', 'images'));
+        return view('weather.index', compact('posts', 'categories'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): RedirectResponse|View
     {
         if (!auth()->check()) {
             return redirect()->route('weather.index')->with('message', 'Log in to create a post!');
@@ -55,9 +54,8 @@ class WeatherController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(PostRequest $request)
+    public function store(PostRequest $request): RedirectResponse
     {
-        $request->validate($request->rules());
         $post = Post::create([
             'place' => $request->place,
             'country' => $request->country,
@@ -87,42 +85,28 @@ class WeatherController extends Controller
                 ]);
             }
         }
-
-        // foreach ($request->file('images') as $imagefile) {
-        //     $image = Postimage::create([
-        //         'image_name' => $imagefile->getClientOriginalName(),
-        //         'post_id' => $post->id
-        //     ]);
-        //     Storage::putFileAs('public/images', $imagefile, $image->image_name);
-        // };
-        // $image = Postimage::create([
-        //     'image_name' => $request->file('image')->getClientOriginalName(),
-        //     'post_id' => $post->id
-        // ]);
-        // Storage::putFileAs('public/images', $request->file('image'), $image->image_name);
         return redirect()->route('weather.index')->with('message', 'Post created successfully!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Post $post): view
     {
-        $api_key = env('API_KEY');
-        $post = Post::findOrFail($id);
-        $images = Postimage::where('post_id', $id)->get('image_name');
+        $api_key = config('app.api_key');
         try {
             $response = Http::get(
                 'https://api.openweathermap.org/data/2.5/weather',
                 [
                     'q' => $post->city,
-                    'appid' => $api_key
+                    'appid' => $api_key,
+                    'units' => 'metric'
                 ]
             )->json();
             $weather = [
                 'description' => $response['weather'][0]['description'],
                 'iconURL' => 'http://openweathermap.org/img/wn/' . $response['weather'][0]['icon'] . '.png',
-                'temp' => $response['main']['temp'] - 273.15,
+                'temp' => $response['main']['temp'],
                 'humidity' => $response['main']['humidity'],
                 'error' => false
             ];
@@ -131,15 +115,14 @@ class WeatherController extends Controller
                 'error' => true
             ];
         }
-        return view('weather.show', compact('post', 'id', 'images', 'weather'));
+        return view('weather.show', compact('post', 'weather'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(Post $post): view
     {
-        $post = Post::findOrFail($id);
         $this->authorize('update', $post);
         $categories = Category::all('id', 'name');
         return view('weather.edit', compact('post', 'categories'));
@@ -148,28 +131,11 @@ class WeatherController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(UpdatePostRequest $request, Post $post): RedirectResponse
     {
-        $post = Post::findOrFail($id);
         $this->authorize('update', $post);
-
-        $request->validate([
-            'place' => 'required|min:3|max:50|string',
-            'country' => 'required|min:2|max:50|string',
-            'city' => 'required|min:2|max:50|string',
-            'description' => 'required',
-            'price' => 'required|numeric',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg',
-            'categories' => 'array|min:1|required'
-        ]);
-
-        $post->update([
-            'place' => $request->place,
-            'country' => $request->country,
-            'city' => $request->city,
-            'description' => $request->description,
-            'price' => $request->price,
-        ]);
+        $validated = $request->safe()->except('images', 'categories');
+        $post->update($validated);
 
         // dd($request->file('images'));
         if ($request->hasFile('images')) {
@@ -200,9 +166,8 @@ class WeatherController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Post $post): RedirectResponse
     {
-        $post = Post::findOrFail($id);
         Storage::deleteDirectory('public/images/' . $post->images->first()->path);
         $this->authorize('delete', $post);
         $post->delete();

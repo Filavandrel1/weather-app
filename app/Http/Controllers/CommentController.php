@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CommentRequest;
 use Illuminate\Http\Request;
 use App\Models\Comment;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 
 class CommentController extends Controller
 {
-    public function store(Request $request)
+    public function store(CommentRequest $request): RedirectResponse
     {
-        $request->validate([
-            'content' => 'required',
-        ]);
         $comment = Comment::create([
             'content' => $request->content,
             'user_id' => auth()->user()->id,
@@ -21,9 +20,8 @@ class CommentController extends Controller
         return redirect()->route('weather.show', $request->post_id);
     }
 
-    public function destroy($id)
+    public function destroy(Comment $comment): RedirectResponse
     {
-        $comment = Comment::find($id);
         if (!Gate::allows('delete', $comment)) {
             return redirect()->back();
         }

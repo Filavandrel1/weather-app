@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PostRequest extends FormRequest
+class UpdatePostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,8 +27,7 @@ class PostRequest extends FormRequest
             'city' => 'required|min:2|max:50|string',
             'description' => 'required',
             'price' => 'required|numeric',
-            'images' => 'required',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'categories' => 'array|min:1|required'
         ];
     }
@@ -44,7 +43,6 @@ class PostRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'images.required' => 'You need at least one image.',
             'images.*.image' => 'The file must be an image.',
             'images.*.mimes' => 'The file must be a file of type: jpeg, png, jpg, gif, svg.',
             'images.*.max' => 'The file may not be greater than 2048 kilobytes.',
